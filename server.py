@@ -77,7 +77,7 @@ def run_countdown(item):
             
         if item['highest_bidder']:
             bidder_addr = item['highest_bidder']
-            broadcast_to_all(f"SOLD! {current_name} goes to bidder at {bidder_addr[0]}:{bidder_addr[1]} for ${item['highest_bid']}")
+            broadcast_to_all(f"SOLD! {current_name} goes to bidder at {bidder_addr[0]}:{bidder_addr[1]} for Rs.{item['highest_bid']}")
         else:
             broadcast_to_all(f"No bids received for {current_name}. Item not sold.")
         
@@ -113,7 +113,7 @@ def start_next_auction():
         broadcast_to_all(f"=== NEW AUCTION ITEM ===")
         broadcast_to_all(f"Item #{item['id']}: {item['name']}")
         broadcast_to_all(f"Description: {item['description']}")
-        broadcast_to_all(f"Starting bid: ${item['starting_bid']}")
+        broadcast_to_all(f"Starting bid: Rs {item['starting_bid']}")
         broadcast_to_all(f"Please place your bids now!")
         
         # Start the auction countdown in a separate thread
@@ -183,7 +183,7 @@ def handle_bid(conn, bid_data):
         
         # Check if the bid is valid
         if bid_amount <= current_item['highest_bid']:
-            conn.send(f"Your bid must be higher than the current bid of ${current_item['highest_bid']}.\n".encode())
+            conn.send(f"Your bid must be higher than the current bid of Rs. {current_item['highest_bid']}.\n".encode())
             return
         
         # Cancel existing timers for the current auction
@@ -194,8 +194,8 @@ def handle_bid(conn, bid_data):
         current_item['highest_bidder'] = conn.getpeername()
         
         # Notify everyone about the new bid
-        broadcast_to_all(f"New bid! ${bid_amount} for {current_item['name']} from bidder at {conn.getpeername()[0]}:{conn.getpeername()[1]}")
-        conn.send(f"Your bid of ${bid_amount} is now the highest! Awaiting more bids...\n".encode())
+        broadcast_to_all(f"New bid! Rs. {bid_amount} for {current_item['name']} from bidder at {conn.getpeername()[0]}:{conn.getpeername()[1]}")
+        conn.send(f"Your bid of Rs. {bid_amount} is now the highest! Awaiting more bids...\n".encode())
         
         # Start a new countdown for this bid
         countdown_timer = threading.Timer(10.0, run_countdown, [current_item])
@@ -203,7 +203,7 @@ def handle_bid(conn, bid_data):
         countdown_timer.start()
 
 def start_server():
-    """Start the auction server"""
+    
     try:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -234,7 +234,7 @@ def start_server():
     
     try:
         while True:
-            events = selector.select(timeout=1)  # Add timeout for more responsive shutdown
+            events = selector.select(timeout=1)  
             for key, _ in events:
                 callback = key.data
                 if callback == accept_connection:

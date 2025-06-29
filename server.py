@@ -130,7 +130,7 @@ def accept_connection(sock):
     clients.append(conn)
     selector.register(conn, selectors.EVENT_READ, read_request)
     
-    # Send welcome message
+    # Send welcome message  
     conn.send("Welcome to the Real-Time Auction System!\n".encode())
     
     # If an auction is in progress, send the current item details

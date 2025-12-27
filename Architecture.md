@@ -1,6 +1,6 @@
 # Architectural Decision Records (ADR)
 
-This document details the engineering choices that enable Jackfruit to handle high-frequency bidding at scale.
+This document details the engineering choices that enable our project to handle high-frequency bidding at scale.
 
 ## 1. Raw TCP Sockets vs. WebSockets
 For this engine, raw TCP was chosen over WebSockets to minimize overhead:

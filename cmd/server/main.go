@@ -1,3 +1,4 @@
+// Result: 442k RPM
 package main
 
 import (

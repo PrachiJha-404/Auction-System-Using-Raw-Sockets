@@ -1,7 +1,7 @@
 package main
 
 import (
-	frame "auction/internal/protocol"
+	"auction/internal/protocol"
 	"log"
 	"net"
 )
@@ -18,7 +18,7 @@ func main() {
 	bidAmount := []byte("500")
 
 	//sending using our frame
-	err = frame.WriteFrame(conn, frame.TypeBid, bidAmount)
+	err = protocol.WriteFrame(conn, protocol.TypeBid, bidAmount)
 	if err != nil {
 		log.Printf("Failed to send bid: %v", err)
 	}

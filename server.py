@@ -221,7 +221,7 @@ def start_server():
         print(f"Socket binding failed with error: {err}")
         return
     
-    server_socket.listen(5)
+    server_socket.listen(1024)
     print("Server is listening for connections...")
     
     server_socket.setblocking(False)

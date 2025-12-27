@@ -1,14 +1,29 @@
 package auction
 
 import (
+	"context"
 	"fmt"
 	"log"
 
 	redis "github.com/go-redis/redis/v8"
 )
 
+// var ctx = context.Background()
+
 // bidScript should be imported or defined from redis.go
-var bidScript *redis.Script
+var bidScript = redis.NewScript(`
+    local current_bid = tonumber(redis.call('get', KEYS[1]) or 0)
+    local new_bid = tonumber(ARGV[1])
+    
+    if new_bid > current_bid then
+        redis.call('set', KEYS[1], new_bid)
+        -- Publish the update: "amount:user"
+        redis.call('publish', 'auction_updates', ARGV[1] .. ":" .. ARGV[2])
+        return 1
+    else
+        return 0
+    end
+`)
 
 type BidEvent struct {
 	Amount int
@@ -32,6 +47,7 @@ func NewManager(rdb *redis.Client) *Manager {
 //Lua script in redis.go
 
 func (m *Manager) Run() {
+	ctx := context.Background()
 	fmt.Println("Aunction Manager started...")
 	for bid := range m.Bids {
 		// 1. Attempt to update state in Redis atomically

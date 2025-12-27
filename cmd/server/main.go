@@ -15,7 +15,7 @@ var ctx = context.Background()
 func main() {
 	//1. Setting up redis
 	rdb := redis.NewClient(&redis.Options{
-		Addr: "localhost:6739",
+		Addr: "localhost:6379",
 	})
 	//2. Setup the Auction Manager (Logic)
 	mgr := auction.NewManager(rdb)

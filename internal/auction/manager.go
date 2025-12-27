@@ -22,13 +22,10 @@ type Manager struct {
 	redisClient *redis.Client
 }
 
-func NewManager() *Manager {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-	})
+func NewManager(rdb *redis.Client) *Manager {
 	return &Manager{
-		Bids:        make(chan BidEvent, 100), //Buffered channel
-		redisClient: redisClient,
+		Bids:        make(chan BidEvent, 100),
+		redisClient: rdb, // Use the one passed in!
 	}
 }
 

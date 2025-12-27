@@ -39,7 +39,7 @@ type Manager struct {
 
 func NewManager(rdb *redis.Client) *Manager {
 	return &Manager{
-		Bids:        make(chan BidEvent, 100),
+		Bids:        make(chan BidEvent, 5000),
 		redisClient: rdb, // Use the one passed in!
 	}
 }
